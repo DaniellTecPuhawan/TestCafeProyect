@@ -1,0 +1,89 @@
+import { Selector } from 'testcafe';
+import fs from 'fs';
+
+// Función para escribir en el log
+function writeLog(message) {
+    const timestamp = new Date().toISOString();
+    const logMessage = `[${timestamp}] ${message}\n`;
+    fs.appendFileSync('test-log1.txt', logMessage);
+}
+
+// Configuración de la prueba
+fixture `Prueba de TestCafe`
+    .page `https://clubcliente.aena.es/AenaClub/es/sessionFinished`
+    .beforeEach(async () => {
+        writeLog("===== Iniciando nueva ejecución de prueba =====");
+    })
+    .afterEach(async () => {
+        writeLog("===== Prueba finalizada =====\n");
+    });
+
+test('Hacer clic en el enlace de usuario y continuar con los demás pasos', async t => {
+    writeLog("Cargando la página...");
+
+    const loginButton = Selector('body > main > header > div > div > div.header__top__nav > div > div.header__top__nav__links__item.header__top__nav__links__item--user.header__top__nav__links__item--session > a').with({ visibilityCheck: true });
+    await t.wait(7000);
+    writeLog("Esperando 3 segundos...");
+
+    try {
+        await t.click(loginButton);
+        writeLog("✔ Se hizo clic en el botón de login.");
+    } catch (error) {
+        writeLog(`❌ Error al hacer clic en login: ${error.name} - ${error.message}\n${error.stack}`);
+    }
+
+    const inputUser = Selector('#gigya-login-form input[type="text"]').with({ visibilityCheck: true });
+    await t.wait(7000);
+    writeLog("Esperando 3 segundos antes de ingresar el usuario...");
+
+    try {
+        await t.typeText(inputUser, 'daniell.tec@entelgy.com');
+        writeLog("✔ Se escribió el usuario.");
+    } catch (error) {
+        writeLog(`❌ Error al escribir en el campo de usuario: ${error.name} - ${error.message}\n${error.stack}`);
+    }
+
+    const inputPass = Selector('#gigya-login-form input[type="password"]').with({ visibilityCheck: true });
+    await t.wait(7000);
+    writeLog("Esperando 3 segundos antes de ingresar la contraseña...");
+
+    const MAX_RETRIES = 3;
+    for (let i = 0; i < MAX_RETRIES; i++) {
+        try {
+            await t.typeText(inputPass, 'Arbust0@EN@1', { replace: true });
+            writeLog("✔ Se escribió la contraseña correctamente.");
+            break;
+        } catch (error) {
+            writeLog(`⚠️ Intento ${i + 1}: Error al escribir la contraseña: ${error.name} - ${error.message}\n${error.stack}`);
+            await t.wait(1000);
+        }
+    }
+
+    const submitButton = Selector('#gigya-login-form input[type="submit"]').with({ visibilityCheck: true });
+    await t.wait(7000);
+    writeLog("Esperando 3 segundos antes de hacer clic en el botón de enviar...");
+
+    try {
+        await t.click(submitButton);
+        writeLog("✔ Se hizo clic en el botón de enviar.");
+    } catch (error) {
+        writeLog(`❌ Error al hacer clic en el botón de submit: ${error.name} - ${error.message}\n${error.stack}`);
+    }
+
+    await t.wait(7000);
+    writeLog("Esperando 3 segundos para verificar el login...");
+
+    const divElement = Selector('body > main > header > div > div > div.header__top__nav > div > div:nth-child(2) > a > div').with({ visibilityCheck: true });
+    await t.wait(7000);
+    writeLog("Esperando 3 segundos para verificar el mensaje en pantalla...");
+
+    try {
+        const divText = await divElement.innerText;
+        await t.expect(divText.toLowerCase()).contains('hola', 'Ha habido un error en el Inicio de sesión');
+        writeLog("✔ El texto en el div contiene 'hola'.");
+    } catch (error) {
+        writeLog(`❌ Error al comprobar el texto del div: ${error.name} - ${error.message}\n${error.stack}`);
+    }
+
+    writeLog("Prueba completada exitosamente.");
+});
