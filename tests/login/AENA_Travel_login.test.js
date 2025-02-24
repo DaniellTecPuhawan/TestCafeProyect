@@ -1,7 +1,7 @@
-import { Selector } from 'testcafe';
+import { Selector, t } from 'testcafe'; 
 import fs from 'fs';
 import path from 'path';
-import Login from '../../pages/AENA_Travel_login';
+import Login from '../../pages/AENA_Travel_Login';
 
 // Generar el nombre del archivo de log solo una vez
 let logFilename = ''; 
@@ -37,37 +37,42 @@ function loadUserCredentials() {
 
     return {
         validUser: parsedData.user1[0],  // Primer usuario válido
-        invalidUsers: parsedData.user2  // Lista de usuarios inválidos
     };
 }
 
-// Selector para el mensaje de error de login (ajusta según lo que el sistema muestre cuando las credenciales son incorrectas)
-const loginErrorMessage = Selector('#gigya-login-form > div.gigya-layout-row.with-divider > div.gigya-layout-cell.responsive.with-site-login > div.gigya-error-display.gigya-composite-control.gigya-composite-control-form-error.aena-submit-error-form-msg.gigya-error-code-403042.gigya-error-display-active > div');
-
 // Configuración de la prueba
-fixture `Login2 AENA Travel`
+fixture `Login AENA Travel`
     .page `https://clubcliente.aena.es/AenaClub/es/sessionFinished`
-    .beforeEach(async t => {
-        // Cambiar el tamaño de la ventana a 1920x1080, modo escritorio
-        await t.resizeWindow(1920, 1080);
-        writeLog("===== Iniciando prueba =====");
+    .beforeEach(async () => {
+        writeLog("===== Iniciando nueva ejecución de prueba =====");
     })
     .afterEach(async () => {
-        writeLog("===== Test realizado =====\n");
+        writeLog("===== Prueba finalizada =====\n");
     });
 
-test('Login con usuario válido', async t => {
+
+
+// Primer test: Login con usuario válido en resolución 1920x1080 (pantalla completa)
+test('Login con usuario válido en resolución completa', async t => {
     writeLog("Cargando la página...");
+    await t.resizeWindow(1920, 1080);  // Redimensionar ventana a 1920x1080
     await t.wait(10000);
 
-    // Detecta si está en modo móvil o escritorio
-    const isMobile = await t.eval(() => window.innerWidth < 768);
+    // Cerrar el modal si aparece
+    //await closeModal();
 
     // Obtener las credenciales del usuario válido
     const { email, password } = loadUserCredentials().validUser;
 
+    // Detecta si está en modo móvil o escritorio
+    const isMobile = await t.eval(() => window.innerWidth < 768);
+
     // Hacer clic en el botón de login correspondiente dependiendo de si es Mobile o Desktop
-    await Login.login(isMobile);
+    const loginButton = isMobile ? Login.loginButtonMobile : Login.loginButtonDesktop;
+
+    // Esperar a que el botón sea visible antes de hacer clic
+    await t.expect(loginButton.visible).ok('El botón de login no es visible.')
+    await t.click(loginButton);
     writeLog(isMobile ? "Se hizo clic en el botón de login para móvil" : "Se hizo clic en el botón de login para escritorio");
 
     // Espera antes de ingresar las credenciales
@@ -87,54 +92,56 @@ test('Login con usuario válido', async t => {
     await t.wait(10000);
     writeLog("Esperando 3 segundos para verificar el login...");
     
-    await Login.verifyLogin();
+    // Verificar el login en función de si es móvil o escritorio
+    await Login.verifyLogin(isMobile);
     writeLog("El texto en el div contiene 'hola'.");
 
     writeLog("Prueba completada exitosamente.");
 });
 
-test('Login con usuarios inválidos', async t => {
-    // Obtener los usuarios inválidos del archivo JSON
-    const invalidUsers = loadUserCredentials().invalidUsers;
+// Segundo test: Login con usuario válido en resolución de móvil
+test('Login con usuario válido en móvil', async t => {
+    writeLog("Cargando la página...");
+    await t.resizeWindow(375, 667);  // Redimensionar ventana a resolución de móvil (Ej. 375x667)
+    await t.wait(10000);
 
-    // Iterar sobre los usuarios inválidos y ejecutar la prueba para cada uno
-    for (let user of invalidUsers) {
-        writeLog(`Cargando la página...`);
-        await t.wait(10000);
+    // Cerrar el modal si aparece
+    //await closeModal();
 
-        // Detecta si está en modo móvil o escritorio
-        const isMobile = await t.eval(() => window.innerWidth < 768);
+    // Obtener las credenciales del usuario válido
+    const { email, password } = loadUserCredentials().validUser;
 
-        // Hacer clic en el botón de login correspondiente dependiendo de si es Mobile o Desktop
-        await Login.login(isMobile);
-        writeLog(isMobile ? "Se hizo clic en el botón de login para móvil" : "Se hizo clic en el botón de login para escritorio");
+    // Detecta si está en modo móvil o escritorio
+    const isMobile = await t.eval(() => window.innerWidth < 768);
 
-        // Espera antes de ingresar las credenciales
-        await t.wait(10000);
-        writeLog("Esperando 3 segundos antes de ingresar el usuario...");
+    // Hacer clic en el botón de login correspondiente dependiendo de si es Mobile o Desktop
+    const loginButton = isMobile ? Login.loginButtonMobile : Login.loginButtonDesktop;
 
-        await Login.enterCredentials(user.email, user.password);
-        writeLog("Se escribieron las credenciales.");
+    // Esperar a que el botón sea visible antes de hacer clic
+    await t.expect(loginButton.visible).ok('El botón de login no es visible.')
+    await t.click(loginButton);
+    writeLog(isMobile ? "Se hizo clic en el botón de login para móvil" : "Se hizo clic en el botón de login para escritorio");
 
-        await t.wait(10000);
-        writeLog("Esperando 3 segundos antes de hacer clic en el botón de enviar...");
+    // Espera antes de ingresar las credenciales
+    await t.wait(10000);
+    writeLog("Esperando 3 segundos antes de ingresar el usuario...");
+    
+    await Login.enterCredentials(email, password);
+    writeLog("Se escribieron las credenciales.");
 
-        await Login.submit();
-        await t.wait(10000);
-        writeLog("Se hizo clic en el botón de enviar.");
+    await t.wait(10000);
+    writeLog("Esperando 3 segundos antes de hacer clic en el botón de enviar...");
+    
+    await Login.submit();
+    await t.wait(10000);
+    writeLog("Se hizo clic en el botón de enviar.");
 
-        await t.wait(10000);
-        writeLog("Esperando 3 segundos para verificar el login...");
+    await t.wait(10000);
+    writeLog("Esperando 3 segundos para verificar el login...");
+    
+    // Verificar el login en función de si es móvil o escritorio
+    await Login.verifyLogin(isMobile);
+    writeLog("El texto en el div contiene 'hola'.");
 
-        // Verificar si hay un error de login
-        const errorMessageVisible = await loginErrorMessage.exists;
-
-        if (errorMessageVisible) {
-            writeLog(`Usuario o contraseña incorrectos: ${user.email}`);
-        } else {
-            writeLog("Login exitoso cuando no debería haberlo sido.");
-        }
-
-        writeLog(`Prueba de usuario inválido completada exitosamente.`);
-    }
+    writeLog("Prueba completada exitosamente.");
 });

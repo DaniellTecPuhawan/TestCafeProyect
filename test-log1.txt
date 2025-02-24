@@ -1,0 +1,8 @@
+[2025-02-24T14:36:17.704Z] ===== Iniciando nueva ejecución de prueba =====
+[2025-02-24T14:36:17.706Z] Cargando la página...
+[2025-02-24T14:36:29.799Z] ===== Prueba finalizada =====
+
+[2025-02-24T14:37:02.653Z] ===== Iniciando nueva ejecución de prueba =====
+[2025-02-24T14:37:02.655Z] Cargando la página...
+[2025-02-24T14:37:15.268Z] ===== Prueba finalizada =====
+

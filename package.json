@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "AENA-Login": "testcafe chrome tests/login/AENA_Travel_login.test.js",
-    "AENA-Login-Headless": "testcafe chrome:headless tests/login/AENA_Travel_login.test.js"
+    "AENA-Login": "testcafe chrome --live tests/login/AENA_Travel_login.test.js",
+    "AENA-Login-Headless": "testcafe chrome:headless tests/login/AENA_Travel_login.test.js",
+    "AENA-Login-Android":"testcafe chrome --emulation device=Pixel 7 tests/login/AENA_Travel_login.test.js",
+    "AENA-Login-Android-Headless":"testcafe chrome --emulation device=Nexus 5 tests/login/AENA_Travel_login.test.js"
   },
   "keywords": [],
   "author": "",
