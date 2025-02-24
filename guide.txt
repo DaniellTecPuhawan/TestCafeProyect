@@ -1,0 +1,34 @@
+testcafe [Chrome, Edge, Firefox] test.js
+Ejecuta las pruebas en los navegadores Chrome, Edge y Firefox de manera estándar, sin omitir errores JavaScript.
+
+testcafe [Chrome, Edge, Firefox] --live test.js
+Este comando ejecutará las pruebas contenidas en test.js en los navegadores Chrome, Edge y Firefox. Además, al estar habilitado el modo --live.
+
+testcafe chrome test.js --skip-js-errors
+Ejecuta las pruebas en Chrome y omite los errores JavaScript que puedan ocurrir durante la ejecución.
+
+testcafe chrome test.js --skip-js-errors --live
+Ejecuta las pruebas en Chrome, omite los errores JavaScript y mantiene el navegador abierto después de finalizar la prueba.
+
+testcafe chrome:headless test.js
+Ejecuta las pruebas en Chrome en modo headless (sin interfaz gráfica), lo que acelera la ejecución.
+
+testcafe chrome:headless test.js --video recordings/ --video-options pathPattern='test-vid.mp4' quality=70
+Ejecuta las pruebas en Chrome en modo headless y graba un video de la ejecución en la carpeta recordings/ con calidad del 70%, nombrando el archivo como test-vid.mp4.
+
+testcafe chrome test.js --video recordings/ --video-options pathPattern='{TEST}-{BROWSER}-{DATE}-{TIME}.mp4' quality=70
+Ejecuta las pruebas en Chrome y graba un video con un nombre de archivo que incluye el nombre de la prueba, el navegador, la fecha y la hora en la carpeta recordings/.
+
+DISPOSITIVOS MÓVILES
+
+testcafe chrome:headless --emulation device=Nexus 5 .\test.js
+Ejecuta las pruebas en Chrome en modo headless, emulando un dispositivo Nexus 5.
+
+testcafe "chrome:headless --emulation:device=Nexus 5, firefox:headless --emulation:device=Nexus 5" .\test.js
+Ejecuta las pruebas en Chrome y Firefox, ambos en modo headless, emulando el dispositivo Nexus 5.
+
+testcafe chrome:headless --emulation device=iPhone X .\test.js
+Ejecuta las pruebas en Chrome en modo headless, emulando un dispositivo iPhone X.
+
+testcafe "chrome:headless --emulation:device=iPhone X, firefox:headless --emulation:device=Nexus 5" .\test.js
+Ejecuta las pruebas en Chrome (emulando un iPhone X) y Firefox (emulando un Nexus 5), ambos en modo headless.

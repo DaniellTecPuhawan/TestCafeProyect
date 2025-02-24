@@ -1,0 +1,19 @@
+{
+    "user1": [
+      {
+        "email": "daniell.tec@entelgy.com",
+        "password": "Arbust0@EN@1"
+      }
+    ],
+    "user2": [
+      {
+        "email": "wronguser@example.com",
+        "password": "WrongPassword@123"
+      },
+      {
+        "email": "anotheruser@example.com",
+        "password": "AnotherPassword@123"
+      }
+    ]
+  }
+  
