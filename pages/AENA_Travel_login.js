@@ -1,7 +1,6 @@
-import { Selector, t } from 'testcafe'; 
+import { Selector, t } from 'testcafe';
 
 class AENA_Travel_Login {
-
     constructor() {
         // Seleccionadores de elementos en la página
         this.loginButtonMobile = Selector('a.header__bottom__item.adobe-analytic-event.div-gigya-login');
@@ -10,18 +9,26 @@ class AENA_Travel_Login {
         this.inputUser = Selector('#gigya-login-form input[type="text"]').with({ visibilityCheck: true });
         this.inputPass = Selector('#gigya-login-form input[type="password"]').with({ visibilityCheck: true });
         this.submitButton = Selector('#gigya-login-form input[type="submit"]').with({ visibilityCheck: true });
-        this.divElement = Selector('body > main > header > div > div > div.header__top__nav > div > div:nth-child(2) > a > div').with({ visibilityCheck: true });
 
         // Selector para el mensaje de error de login
-        this.loginErrorMessage = Selector('#gigya-login-form > div.gigya-layout-row.with-divider > div.gigya-layout-cell.responsive.with-site-login > div.gigya-error-display.gigya-composite-control.gigya-composite-control-form-error.aena-submit-error-form-msg.gigya-error-code-403042.gigya-error-display-active > div');
-        
-        // Seleccionadores para verificar el login
+        this.loginErrorMessage = Selector('#gigya-login-form div.gigya-error-display-active > div');
+
+        // Selectores para verificar login exitoso
         this.loginSuccessWindows = Selector('body > main > div.main__inner-wrapper > div.color-bg > div:nth-child(1) > div > h2');
         this.loginSuccessAndroid = Selector('body > main > header > div > div > div.header__top__nav > div > div:nth-child(2) > a > div');
+
+        // Selector de botón de aceptación de cookies (ajustar si es necesario)
+        this.acceptCookiesButton = Selector('button').withText('Aceptar');
+    }
+
+    async acceptCookies() {
+        if (await this.acceptCookiesButton.exists && await this.acceptCookiesButton.visible) {
+            await t.click(this.acceptCookiesButton);
+        }
     }
 
     async login(isMobile) {
-        // Hacer clic en el botón de login dependiendo de si es móvil o escritorio
+        await this.acceptCookies();
         if (isMobile) {
             await t.click(this.loginButtonMobile);
         } else {
@@ -30,37 +37,28 @@ class AENA_Travel_Login {
     }
 
     async enterCredentials(email, password) {
-        // Introduce el usuario y la contraseña
+        await this.acceptCookies();
         await t.typeText(this.inputUser, email);
         await t.typeText(this.inputPass, password, { replace: true });
     }
 
     async submit() {
-        // Hacer clic en el botón de submit para enviar el formulario
+        await this.acceptCookies();
         await t.click(this.submitButton);
     }
 
     async verifyLogin() {
-        // Detectar si estamos en una plataforma móvil o de escritorio (Windows o Android)
+        await this.acceptCookies();
         const isAndroid = await t.eval(() => navigator.userAgent.toLowerCase().includes('android'));
-        let loginSuccessSelector;
+        const loginSuccessSelector = isAndroid ? this.loginSuccessAndroid : this.loginSuccessWindows;
 
-        // Usar el selector correcto según la plataforma
-        if (isAndroid) {
-            loginSuccessSelector = this.loginSuccessAndroid;
-        } else {
-            loginSuccessSelector = this.loginSuccessWindows;
-        }
-
-        // Verificar si el texto "hola" está presente en el elemento adecuado
         const divText = await loginSuccessSelector.innerText;
         await t.expect(divText.toLowerCase()).contains('hola', 'El inicio de sesión no fue exitoso');
     }
 
     async verifyLoginError() {
-        // Verificar si aparece el mensaje de error
-        const errorMessageVisible = await this.loginErrorMessage.exists;
-        return errorMessageVisible;
+        await this.acceptCookies();
+        return await this.loginErrorMessage.exists;
     }
 }
 

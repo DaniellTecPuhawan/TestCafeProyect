@@ -1,0 +1,14 @@
+[2025-02-25T08:45:16.093Z] ===== Iniciando nueva ejecución de prueba =====
+[2025-02-25T08:45:16.096Z] Cargando la página...
+[2025-02-25T08:45:26.433Z] Cookies aceptadas.
+[2025-02-25T08:45:27.107Z] Se hizo clic en el botón de login.
+[2025-02-25T08:45:33.539Z] Se escribieron las credenciales.
+[2025-02-25T08:45:40.563Z] Se hizo clic en el botón de enviar.
+[2025-02-25T08:45:51.073Z] Prueba completada exitosamente.
+[2025-02-25T08:45:51.074Z] ===== Prueba finalizada =====
+
+[2025-02-25T08:45:51.900Z] ===== Iniciando nueva ejecución de prueba =====
+[2025-02-25T08:45:51.901Z] Cargando la página...
+[2025-02-25T08:46:00.351Z] Cookies aceptadas.
+[2025-02-25T08:46:10.977Z] ===== Prueba finalizada =====
+
