@@ -5,8 +5,7 @@
   "scripts": {
     "AENA-Login-chrome": "testcafe chrome tests/login/AENA_Travel_login.test.js",
     "AENA-Login-firefox": "testcafe firefox tests/login/AENA_Travel_login.test",
-    "AENA-Login-Android":"testcafe chrome --emulation device=Pixel 7 tests/login/AENA_Travel_login.test.js",
-    "AENA-Login-Android-Headless":"testcafe chrome --emulation device=Nexus 5 tests/login/AENA_Travel_login.test.js"
+    "AENA-Login-edge":"testcafe edge tests/login/AENA_Travel_login.test"
   },
   "keywords": [],
   "author": "",
