@@ -1,0 +1,19 @@
+[2025-02-25T12:38:50.440Z] ===== Iniciando nueva ejecución de prueba =====
+[2025-02-25T12:38:52.242Z] ✔ La página https://clubcliente.aena.es/AenaClub/es/sessionFinished respondió con 200.
+[2025-02-25T12:38:52.243Z] Accediendo a AENA Travel
+[2025-02-25T12:38:59.039Z] Se aceptaron las cookies
+[2025-02-25T12:38:59.710Z] Se hizo click en el botón de login.
+[2025-02-25T12:39:05.754Z] Se escribieron las credenciales.
+[2025-02-25T12:39:12.081Z] Se hizo clic en el botón de enviar.
+[2025-02-25T12:39:17.194Z] Prueba completada exitosamente.
+[2025-02-25T12:39:17.195Z] ===== Prueba finalizada =====
+
+[2025-02-25T12:39:17.851Z] ===== Iniciando nueva ejecución de prueba =====
+[2025-02-25T12:39:18.539Z] ✔ La página https://clubcliente.aena.es/AenaClub/es/sessionFinished respondió con 200.
+[2025-02-25T12:39:18.541Z] Cargando la página...
+[2025-02-25T12:39:25.370Z] Cookies aceptadas.
+[2025-02-25T12:39:25.962Z] Se hizo clic en el botón de login.
+[2025-02-25T12:39:32.319Z] Se escribieron las credenciales.
+[2025-02-25T12:39:37.804Z] Se hizo clic en el botón de enviar.
+[2025-02-25T12:39:47.851Z] ===== Prueba finalizada =====
+

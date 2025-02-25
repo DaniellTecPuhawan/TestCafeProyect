@@ -1,0 +1,9 @@
+[2025-02-25T13:18:04.038Z] ===== Iniciando nueva ejecución de prueba =====
+[2025-02-25T13:18:05.801Z] ✔ La página https://clubcliente.aena.es/AenaClub/es/sessionFinished respondió con 200.
+[2025-02-25T13:18:05.803Z] Cargando la página...
+[2025-02-25T13:18:12.654Z] Cookies aceptadas.
+[2025-02-25T13:18:13.259Z] Se hizo clic en el botón de login.
+[2025-02-25T13:18:19.407Z] Se escribieron las credenciales.
+[2025-02-25T13:18:24.983Z] Se hizo clic en el botón de enviar.
+[2025-02-25T13:18:35.050Z] ===== Prueba finalizada =====
+
