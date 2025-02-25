@@ -1,0 +1,123 @@
+1. Visitar una URL
+Para visitar una URL con TestCafe, simplemente usa el comando page en el fixture. Este comando abrirá la URL de la página que deseas probar.
+javascript
+CopyEdit
+fixture `Visitar una URL`
+    .page `https://example.com`; // URL que quieres probar
+
+test('Abrir página de ejemplo', async t => {
+    // La página se abre automáticamente en la definición del fixture
+    await t.expect(Selector('h1').innerText).contains('Example Domain'); // Verificar que el texto de la página contiene "Example Domain"
+});
+2. Hacer clic en elementos
+Puedes hacer clic en cualquier elemento usando t.click(). Asegúrate de que el selector que estás utilizando sea el adecuado para el elemento al que deseas hacer clic.
+javascript
+CopyEdit
+test('Hacer clic en un botón', async t => {
+    const button = Selector('#my-button');  // Selector para el botón
+    await t.click(button);  // Hacer clic en el botón
+});
+3. Escribir en elementos (formularios de texto)
+Si quieres escribir en un campo de texto (input), usa t.typeText(). Puedes escribir en cualquier tipo de campo como input, textarea, etc.
+javascript
+CopyEdit
+test('Escribir en un campo de texto', async t => {
+    const input = Selector('#my-input');  // Selector para el campo de texto
+    await t.typeText(input, 'Mi texto');  // Escribir en el campo
+});
+Si el campo ya tiene un valor y quieres reemplazarlo completamente, puedes usar la opción { replace: true }:
+javascript
+CopyEdit
+await t.typeText(input, 'Nuevo texto', { replace: true });
+4. Esperar a que aparezca un elemento (Esperas explícitas)
+A veces, puede ser necesario esperar a que un elemento esté disponible antes de interactuar con él. Para esto, puedes usar await t.expect().ok() para esperar hasta que el selector sea visible.
+javascript
+CopyEdit
+test('Esperar a que un elemento esté visible', async t => {
+    const element = Selector('#my-element');  // Selector del elemento que queremos verificar
+    await t.expect(element.visible).ok('El elemento no es visible');  // Esperar a que el elemento esté visible
+});
+5. Esperar un tiempo específico (Esperas implícitas)
+En algunas situaciones, es posible que necesites esperar un período de tiempo específico para que algo ocurra, como una animación o una carga de datos. TestCafe tiene un método t.wait() para esperar una cantidad de milisegundos antes de continuar.
+javascript
+CopyEdit
+test('Esperar durante un tiempo específico', async t => {
+    await t.wait(2000);  // Esperar 2 segundos
+});
+6. Verificar la existencia de un elemento
+Puedes verificar si un elemento existe en la página usando exists. Esto es útil si quieres asegurarte de que un botón, texto o cualquier otro elemento esté presente en la página.
+javascript
+CopyEdit
+test('Verificar existencia de un elemento', async t => {
+    const element = Selector('#my-element');
+    await t.expect(element.exists).ok('El elemento no existe');
+});
+7. Verificar el texto de un elemento
+Para asegurarte de que un elemento contenga un texto específico, puedes usar el método innerText o textContent.
+javascript
+CopyEdit
+test('Verificar texto de un elemento', async t => {
+    const h1 = Selector('h1');
+    await t.expect(h1.innerText).eql('Bienvenido a la página de ejemplo', 'El texto no coincide');
+});
+8. Cambiar el tamaño de la ventana del navegador
+Si necesitas realizar pruebas de diseño responsivo o ver cómo se comporta una página en diferentes tamaños de pantalla, puedes redimensionar la ventana con t.resizeWindow().
+javascript
+CopyEdit
+test('Cambiar el tamaño de la ventana del navegador', async t => {
+    await t.resizeWindow(1024, 768);  // Tamaño de la ventana 1024x768
+});
+9. Verificar si un elemento está habilitado o deshabilitado
+Puedes verificar si un elemento está habilitado o deshabilitado para interactuar con él usando enabled.
+javascript
+CopyEdit
+test('Verificar si un botón está habilitado', async t => {
+    const button = Selector('#submit-button');
+    await t.expect(button.enabled).ok('El botón está deshabilitado');
+});
+10. Verificar la visibilidad de un elemento
+Además de verificar la existencia de un elemento, también puedes verificar si el elemento es visible o no.
+javascript
+CopyEdit
+test('Verificar visibilidad de un elemento', async t => {
+    const element = Selector('#my-element');
+    await t.expect(element.visible).ok('El elemento no es visible');
+});
+11. Obtener y verificar valores de atributos
+A veces, puedes necesitar verificar el valor de un atributo de un elemento, como un href, src, etc.
+javascript
+CopyEdit
+test('Verificar atributo de un enlace', async t => {
+    const link = Selector('a#my-link');
+    const href = await link.getAttribute('href');
+    await t.expect(href).eql('https://example.com', 'El enlace no tiene el valor correcto');
+});
+12. Navegar hacia atrás o hacia adelante en el navegador
+Puedes simular las acciones de navegación hacia atrás o adelante utilizando t.navigateBack() y t.navigateForward().
+javascript
+CopyEdit
+test('Navegar hacia atrás y adelante', async t => {
+    await t.navigateBack();  // Regresar a la página anterior
+    await t.wait(2000);  // Espera 2 segundos
+    await t.navigateForward();  // Avanzar a la página siguiente
+});
+13. Ejecutar JavaScript dentro del navegador
+Puedes ejecutar código JavaScript dentro del contexto del navegador utilizando ClientFunction.
+javascript
+CopyEdit
+const getDocumentTitle = ClientFunction(() => document.title);
+
+test('Obtener el título de la página', async t => {
+    const title = await getDocumentTitle();
+    await t.expect(title).eql('Example Domain', 'El título de la página no es correcto');
+});
+Resumen de funciones básicas:
+•	fixture: Define el conjunto de pruebas y la URL que se va a probar.
+•	test: Define cada prueba individual.
+•	Selector(): Encuentra un elemento en la página mediante un selector CSS.
+•	t.click(): Hace clic en un elemento.
+•	t.typeText(): Escribe texto en un campo de entrada.
+•	t.expect(): Verifica condiciones (para validación).
+•	t.resizeWindow(): Cambia el tamaño de la ventana del navegador.
+•	t.wait(): Espera un período específico.
+•	ClientFunction(): Ejecuta funciones JavaScript en el navegador.

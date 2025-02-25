@@ -4,6 +4,7 @@ import path from 'path';
 import Login from '../../pages/AENA_Travel_Login';
 
 let logFilename = '';
+let browserConsoleMessages = [];
 
 // Función para escribir logs
 function writeLog(message) {
@@ -24,16 +25,40 @@ function writeLog(message) {
     fs.appendFileSync(logFilename, logMessage);
 }
 
-// ClientFunction para capturar los mensajes de la consola
+// ClientFunction para capturar todos los mensajes de la consola
 const getBrowserConsoleMessages = ClientFunction(() => {
-    return window.console.messages || []; // Asegúrate de que los mensajes se almacenen en este arreglo
+    window.console.messages = window.console.messages || [];
+    const originalConsoleLog = console.log;
+    const originalConsoleError = console.error;
+    const originalConsoleWarn = console.warn;
+
+    const captureConsoleMessage = (message, level) => {
+        window.console.messages.push({ message, level });
+    };
+
+    console.log = (...args) => {
+        captureConsoleMessage(args.join(' '), 'log');
+        originalConsoleLog.apply(console, args);
+    };
+    
+    console.error = (...args) => {
+        captureConsoleMessage(args.join(' '), 'error');
+        originalConsoleError.apply(console, args);
+    };
+
+    console.warn = (...args) => {
+        captureConsoleMessage(args.join(' '), 'warn');
+        originalConsoleWarn.apply(console, args);
+    };
+
+    return window.console.messages;
 });
 
+// Cargar las credenciales de usuario
 function loadUserCredentials() {
     const filePath = path.join(__dirname, '..', '..', '/data/users.json');
     const data = fs.readFileSync(filePath, 'utf8');
     const parsedData = JSON.parse(data);
-
     return { validUser: parsedData.user1[0], invalidUser: parsedData.user2[0] };
 }
 
@@ -54,17 +79,17 @@ fixture `Login AENA Travel`
         await checkResponseStatus('https://clubcliente.aena.es/AenaClub/es/sessionFinished'); // Verifica status 200
     })
     .afterEach(async () => {
-        // Captura los mensajes de la consola del navegador después de cada prueba
-        const browserConsoleMessages = await getBrowserConsoleMessages();
+        browserConsoleMessages = await getBrowserConsoleMessages();
 
-        // Filtra los errores (puedes modificar esto según tu necesidad)
-        const errorMessages = browserConsoleMessages.filter(msg => msg.includes('Error') || msg.level === 'error');
+        const errorMessages = browserConsoleMessages.filter(msg => msg.level === 'error');
 
-        // Si hay errores, los escribimos en el log
         if (errorMessages.length > 0) {
             writeLog("=== Errores de la consola del navegador ===");
-            errorMessages.forEach(msg => writeLog(msg));
+            errorMessages.forEach(msg => writeLog(msg.message));
         }
+
+        writeLog("=== Todos los mensajes de la consola ===");
+        browserConsoleMessages.forEach(msg => writeLog(`[${msg.level}] ${msg.message}`));
 
         writeLog("===== Prueba finalizada =====\n");
     });
@@ -72,7 +97,7 @@ fixture `Login AENA Travel`
 // Test con usuario válido en resolución completa
 test('Login con usuario válido en resolución completa', async t => {
     writeLog("Accediendo a AENA Travel");
-    await t.resizeWindow(1920, 1080);
+    await t.resizeWindow(1280, 720);
     await t.wait(5000);
 
     await Login.acceptCookies();
@@ -82,11 +107,14 @@ test('Login con usuario válido en resolución completa', async t => {
     const isMobile = await t.eval(() => window.innerWidth < 768);
     const loginButton = isMobile ? Login.loginButtonMobile : Login.loginButtonDesktop;
 
+    await t.wait(10000);
+
     await t.expect(loginButton.visible).ok('El botón de login no es visible.');
     await t.click(loginButton);
     writeLog("Se hizo click en el botón de login.");
 
-    await t.wait(5000);
+    await t.wait(20000);
+    
     await Login.enterCredentials(email, password);
     writeLog("Se escribieron las credenciales.");
 
@@ -102,7 +130,7 @@ test('Login con usuario válido en resolución completa', async t => {
 // Test con usuario incorrecto en resolución completa
 test('Login con usuario incorrecto en resolución completa', async t => {
     writeLog("Cargando la página...");
-    await t.resizeWindow(1920, 1080);
+    await t.resizeWindow(1280, 720);
     await t.wait(5000);
 
     await Login.acceptCookies();
