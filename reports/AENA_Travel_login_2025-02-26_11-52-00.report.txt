@@ -1,0 +1,2 @@
+[2025-02-26T11:52:00.403Z] ===== Iniciando nueva ejecución de prueba =====
+[2025-02-26T11:52:05.383Z] ===== Iniciando nueva ejecución de prueba =====

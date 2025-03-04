@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "AENA-Login-chrome": "testcafe chrome tests/login/AENA_Travel_login.test.js",
-    "AENA-Login-chrome-headless": "testcafe chrome:headless  tests/login/AENA_Travel_login.test.js",
+    "AENA-Login-chrome-headless": "testcafe chrome:headless --skip-js-errors --debug-on-fail tests/login/AENA_Travel_login.test.js",
     "AENA-Login-firefox": "testcafe firefox tests/login/AENA_Travel_login.test.js",
     "AENA-Login-edge":"testcafe edge tests/login/AENA_Travel_login.test"
   },

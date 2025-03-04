@@ -1,0 +1,8 @@
+[2025-02-26T15:39:58.926Z] ===== Iniciando nueva ejecución de prueba =====
+[2025-02-26T15:40:02.727Z] ✔ La página https://clubcliente.aena.es/AenaClub/es/sessionFinished respondió con 200.
+[2025-02-26T15:40:02.729Z] Accediendo a AENA Travel
+[2025-02-26T15:40:09.469Z] Se aceptaron las cookies
+[2025-02-26T15:40:19.970Z] Se hizo click en el botón de login.
+[2025-02-26T15:40:50.635Z] === Todos los mensajes de la consola ===
+[2025-02-26T15:40:50.636Z] ===== Prueba finalizada =====
+
